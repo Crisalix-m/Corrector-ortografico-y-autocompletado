@@ -1,0 +1,10 @@
+casa
+perro
+gato
+computadora
+programacion
+arbol
+libro
+universidad
+estudiante
+perro
