@@ -308,8 +308,12 @@ std::size_t DiccionarioHash::tamano() const {
 //  El factor de carga se calcula como la cantidad de elementos dividida por la capacidad de la tabla.
 // ===================================================
 
-std::size_t DiccionarioHash::tamano() const {
+double DiccionarioHash::factorCarga() const {
 
-    return cantidad;
+    if (tabla.empty()) {
+        return 0.0;
+    }
+
+    return static_cast<double>(cantidad) / tabla.size();
 
 }
