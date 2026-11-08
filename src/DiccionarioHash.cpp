@@ -62,12 +62,33 @@ std::size_t DiccionarioHash::funcionHash(
     return hash % tabla.size();
 }
 
+std::size_t DiccionarioHash::funcionHash(
+    const std::string& palabra,
+    std::size_t capacidad
+) const {
+
+    std::uint64_t hash = 14695981039346656037ULL;
+
+    for (unsigned char caracter : palabra) {
+
+        hash ^= caracter;
+
+        hash *= 1099511628211ULL;
+    }
+
+    return hash % capacidad;
+}
+
 // ===================================================
 //  Rehash: Redimensiona la tabla hash a una nueva capacidad y reubica los elementos existentes.
 //  Se utiliza cuando el factor de carga supera el factor máximo permitido.
 // ===================================================
 
 void DiccionarioHash::rehash(std::size_t nuevaCapacidad) {
+
+    if (nuevaCapacidad == 0) {
+        return;
+    }
 
     std::vector<Nodo*> nuevaTabla(nuevaCapacidad, nullptr);
 
@@ -80,7 +101,7 @@ void DiccionarioHash::rehash(std::size_t nuevaCapacidad) {
             Nodo* siguiente = actual->siguiente;
 
             std::size_t nuevaPosicion =
-                funcionHash(actual->palabra);
+                funcionHash(actual->palabra, nuevaCapacidad);
 
             actual->siguiente = nuevaTabla[nuevaPosicion];
 
@@ -92,7 +113,6 @@ void DiccionarioHash::rehash(std::size_t nuevaCapacidad) {
 
     tabla = std::move(nuevaTabla);
 }
-
 // ===================================================
 //  Insertar: Inserta una palabra en la tabla hash con su frecuencia.
 //  Si la palabra ya existe, incrementa su frecuencia.
@@ -117,7 +137,7 @@ bool DiccionarioHash::insertar(
 
         if (actual->palabra == palabra) {
 
-            actual->frecuencia = frecuencia;
+            actual->frecuencia += frecuencia;
 
             return false;
         }
@@ -262,30 +282,32 @@ bool DiccionarioHash::obtenerFrecuencia(
 // ===================================================
 
 
+
 bool DiccionarioHash::cargarDesdeArchivo(
     const std::string& ruta
 ) {
-
     std::ifstream archivo(ruta);
 
     if (!archivo.is_open()) {
-
         return false;
-
     }
 
     std::string palabra;
 
     while (std::getline(archivo, palabra)) {
 
-        if (palabra.empty()) {
-
-            continue;
-
+        // Eliminar retorno de carro de Windows
+        if (!palabra.empty() && palabra.back() == '\r') {
+            palabra.pop_back();
         }
 
-        insertar(palabra, 1);
+        // Ignorar líneas vacías
+        if (palabra.empty()) {
+            continue;
+        }
 
+        // Insertar la entrada en la tabla hash
+        insertar(palabra, 1);
     }
 
     archivo.close();
