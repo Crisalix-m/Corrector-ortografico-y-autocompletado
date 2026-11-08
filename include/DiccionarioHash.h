@@ -34,6 +34,12 @@ private:
 
     std::size_t funcionHash(
         const std::string& palabra
+
+    ) const;
+    
+    std::size_t funcionHash(            //otroarrojado
+    const std::string& palabra,
+    std::size_t capacidad
     ) const;
 
     void rehash(std::size_t nuevaCapacidad);
