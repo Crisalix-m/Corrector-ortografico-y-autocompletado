@@ -9,6 +9,8 @@ PROYECTO N°6
 -------
 // CONTEO DE LAS PRIMERAS 10 PALABRAS Y CONTEO DE LAS PALABRAS UNICAS QUE EXISTEN //
 
-1. Get-Content data/diccionario.txt | Select-Object -First 10           
+1. Get-Content data/diccionario.txt | Select-Object -First 10    
+(con UTF-8 QUE ADMITE TILDES)
+Get-Content data/diccionario.txt -Encoding UTF8 | Select-Object -First 10       
 
 2. (Get-Content data/diccionario.txt | Sort-Object -Unique).Count  
