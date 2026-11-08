@@ -1,0 +1,8 @@
+
+# Archivos generados al compilar
+corrector
+corrector.exe
+*.o
+*.obj
+build/
+.vscode/
