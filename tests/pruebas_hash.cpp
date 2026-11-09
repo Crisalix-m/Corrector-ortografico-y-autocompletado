@@ -94,9 +94,6 @@ int main() {
               << diccionarioArchivo.factorCarga() << "\n";
 
 
-    std::cout << "\n=== TODAS LAS PRUEBAS FINALIZADAS ===\n";
-
-
     // PRUEBA 7: Verificar palabras después de rehash
 
     assert(diccionarioArchivo.buscar("casa"));
@@ -229,6 +226,167 @@ int main() {
     assert(frecuenciaManzana == 6);
 
     std::cout << "[OK] Frecuencia conservada despues de rehash\n";
+
+    // PRUEBA 16: Guardar diccionario personal
+
+    DiccionarioHash diccionarioPersonal;
+
+    diccionarioPersonal.insertar("ChatGPT");
+    diccionarioPersonal.insertar("OpenAI");
+    diccionarioPersonal.insertar("programación");
+    diccionarioPersonal.insertar("ciberseguridad");
+
+    assert(diccionarioPersonal.guardarEnArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    std::cout << "[OK] Guardado del diccionario personal\n";
+
+    
+    // PRUEBA 17: Recuperar diccionario personal
+
+    DiccionarioHash diccionarioRecuperado;
+
+    bool recuperado = diccionarioRecuperado.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    );
+
+    assert(recuperado);
+
+    assert(diccionarioRecuperado.buscar("ChatGPT"));
+    assert(diccionarioRecuperado.buscar("OpenAI"));
+    assert(diccionarioRecuperado.buscar("programación"));
+    assert(diccionarioRecuperado.buscar("ciberseguridad"));
+
+    assert(diccionarioRecuperado.tamano() == 4);
+
+    std::cout << "[OK] Recuperacion del diccionario personal\n";
+
+    
+    // PRUEBA 18: Agregar palabras personales sin duplicados
+
+    DiccionarioHash diccionarioNuevo;
+
+    assert(diccionarioNuevo.agregarPalabraPersonal("Python"));
+
+    assert(diccionarioNuevo.agregarPalabraPersonal("Java"));
+
+    assert(!diccionarioNuevo.agregarPalabraPersonal("Python"));
+
+    assert(diccionarioNuevo.tamano() == 2);
+
+    assert(!diccionarioNuevo.agregarPalabraPersonal(""));
+
+    std::cout << "[OK] Control de duplicados personales\n";
+
+    
+    // PRUEBA 19: Agregar y guardar automaticamente
+
+    DiccionarioHash diccionarioAutomatico;
+
+    assert(diccionarioAutomatico.agregarYGuardarPalabraPersonal(
+        "algoritmo",
+        "data/diccionario_personal.txt"
+    ));
+
+    assert(diccionarioAutomatico.buscar("algoritmo"));
+
+    DiccionarioHash diccionarioComprobacion;
+
+    assert(diccionarioComprobacion.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    assert(diccionarioComprobacion.buscar("algoritmo"));
+
+    std::cout << "[OK] Guardado automatico de palabras personales\n";
+
+    
+    // PRUEBA 20: Conservar palabras anteriores
+
+    DiccionarioHash diccionarioPersistente;
+
+    assert(diccionarioPersistente.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    assert(diccionarioPersistente.buscar("algoritmo"));
+
+    assert(diccionarioPersistente.agregarPalabraPersonal(
+        "estructuras"
+    ));
+
+    assert(diccionarioPersistente.guardarEnArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    DiccionarioHash diccionarioFinal;
+
+    assert(diccionarioFinal.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    assert(diccionarioFinal.buscar("algoritmo"));
+    assert(diccionarioFinal.buscar("estructuras"));
+
+    std::cout << "[OK] Conservacion de palabras personales\n";
+
+    
+    // PRUEBA 21: Cargar dos veces sin duplicar frecuencias
+
+    DiccionarioHash diccionarioDobleCarga;
+
+    assert(diccionarioDobleCarga.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    std::size_t frecuenciaInicial = 0;
+
+    assert(diccionarioDobleCarga.obtenerFrecuencia(
+        "algoritmo", frecuenciaInicial
+    ));
+
+    assert(diccionarioDobleCarga.cargarDesdeArchivo(
+        "data/diccionario_personal.txt"
+    ));
+
+    std::size_t frecuenciaFinal = 0;
+
+    assert(diccionarioDobleCarga.obtenerFrecuencia(
+        "algoritmo", frecuenciaFinal
+    ));
+
+    assert(frecuenciaInicial == frecuenciaFinal);
+
+    std::cout << "[OK] Carga repetida sin alterar frecuencias\n";
+
+    
+    // PRUEBA 22: Guardar palabras con caracteres especiales
+
+    DiccionarioHash diccionarioEspecial;
+
+    assert(diccionarioEspecial.insertar("árbol"));
+    assert(diccionarioEspecial.insertar("niño"));
+    assert(diccionarioEspecial.insertar("programación"));
+
+    assert(diccionarioEspecial.guardarEnArchivo(
+        "data/prueba_guardado.txt"
+    ));
+
+    DiccionarioHash diccionarioEspecialRecuperado;
+
+    assert(diccionarioEspecialRecuperado.cargarDesdeArchivo(
+        "data/prueba_guardado.txt"
+    ));
+
+    assert(diccionarioEspecialRecuperado.buscar("árbol"));
+    assert(diccionarioEspecialRecuperado.buscar("niño"));
+    assert(diccionarioEspecialRecuperado.buscar("programación"));
+
+    std::cout << "[OK] Guardado y recuperacion de caracteres especiales\n";
+
+
+    std::cout << "\n=== TODAS LAS PRUEBAS FINALIZADAS ===\n";
 
     return 0;
 }
