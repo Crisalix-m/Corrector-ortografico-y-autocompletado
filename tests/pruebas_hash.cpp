@@ -370,13 +370,13 @@ int main() {
     assert(diccionarioEspecial.insertar("programación"));
 
     assert(diccionarioEspecial.guardarEnArchivo(
-        "data/prueba_guardado.txt"
+        "tests/prueba_guardado.txt"
     ));
 
     DiccionarioHash diccionarioEspecialRecuperado;
 
     assert(diccionarioEspecialRecuperado.cargarDesdeArchivo(
-        "data/prueba_guardado.txt"
+        "tests/prueba_guardado.txt"
     ));
 
     assert(diccionarioEspecialRecuperado.buscar("árbol"));
