@@ -1,16 +1,34 @@
-PROYECTO N°6
+### PROYECTO N.º 6 – INTEGRANTE 1
+Implementación de DiccionarioHash
+1. Compilación y ejecución de las pruebas de tabla hash
 
-// Para ejecutar el hash: 
-[Te arroja el resultado de si esstá OK todas las funciones además de el conteo de palaqbras y factor de carga] //
-1. g++ -std=c++17 -Wall -Wextra -g -Iinclude src/DiccionarioHash.cpp tests/pruebas_hash.cpp -o pruebas_hash
+Desde la carpeta raíz del proyecto, ejecutar:
 
-2. .\pruebas_hash.exe
+Compilación:
 
--------
-// CONTEO DE LAS PRIMERAS 10 PALABRAS Y CONTEO DE LAS PALABRAS UNICAS QUE EXISTEN //
+g++ -std=c++17 -Wall -Wextra -g -Iinclude src/DiccionarioHash.cpp tests/pruebas_hash.cpp -o pruebas_hash.exe
 
-1. Get-Content data/diccionario.txt | Select-Object -First 10    
-(con UTF-8 QUE ADMITE TILDES)
-Get-Content data/diccionario.txt -Encoding UTF8 | Select-Object -First 10       
+Ejecución:
 
-2. (Get-Content data/diccionario.txt | Sort-Object -Unique).Count  
+.\pruebas_hash.exe
+
+La ejecución permite verificar las funcionalidades de la tabla hash, incluyendo inserción, búsqueda, eliminación, frecuencias, redimensionamiento, diccionario personal y persistencia.
+
+También muestra el conteo de palabras almacenadas, el factor de carga y los tiempos de ejecución de determinadas pruebas.
+
+2. Consulta del diccionario principal
+
+Mostrar las primeras 10 palabras:
+
+Get-Content data/Diccionario.txt -Encoding UTF8 | Select-Object -First 10
+
+Contar las palabras únicas:
+
+(Get-Content data/Diccionario.txt -Encoding UTF8 | Sort-Object -Unique).Count
+3. Organización de archivos de prueba
+
+El archivo auxiliar utilizado para verificar el guardado y recuperación de información se encuentra en:
+
+tests/prueba_guardado.txt
+
+Las pruebas deben ejecutarse desde la carpeta raíz del proyecto para que las rutas relativas funcionen correctamente.
