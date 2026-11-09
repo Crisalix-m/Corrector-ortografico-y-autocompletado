@@ -2,6 +2,7 @@
 #include <utility>
 #include <fstream>
 #include <string>
+#include <cstdint>  // Fija el tamaño de los int
 
 DiccionarioHash::Nodo::Nodo(    //constructor de la estructura Nodo, que está dentro de DiccionarioHash
     const std::string& p,       // p, lo que almacenamos en palabra
@@ -16,7 +17,7 @@ DiccionarioHash::Nodo::Nodo(    //constructor de la estructura Nodo, que está d
 //constructor de la clase DiccionarioHash
 //Inicializa la tabla hash con una capacidad inicial y establece la cantidad de elementos y el factor máximo de carga 
 DiccionarioHash::DiccionarioHash(std::size_t capacidadInicial) {   
-    tabla.resize(capacidadInicial, nullptr);
+    tabla.resize(capacidadInicial == 0 ? 101 : capacidadInicial, nullptr);
 
     cantidad = 0;               // Sin palabras insertadas aún
 
@@ -42,7 +43,7 @@ DiccionarioHash::~DiccionarioHash() {
 }
 
 // ===================================================
-//  Función Hash: Calcula el índice de la tabla hash para una palabra dada utilizando el algoritmo de hash djb2.
+//  Función Hash: Calcula el índice de la tabla hash para una palabra dada utilizando el algoritmo de FNV-1a
 //  Devuelve el índice calculado como un valor de tipo std::size_t.
 // ===================================================
 
@@ -283,9 +284,11 @@ bool DiccionarioHash::obtenerFrecuencia(
 
 
 
+
 bool DiccionarioHash::cargarDesdeArchivo(
     const std::string& ruta
 ) {
+
     std::ifstream archivo(ruta);
 
     if (!archivo.is_open()) {
@@ -306,15 +309,18 @@ bool DiccionarioHash::cargarDesdeArchivo(
             continue;
         }
 
-        // Insertar la entrada en la tabla hash
-        insertar(palabra, 1);
+        // Evitar aumentar frecuencias al cargar duplicados
+        if (!buscar(palabra)) {
+            insertar(palabra, 1);
+        }
     }
+
+    bool lecturaCorrecta = archivo.eof() && !archivo.bad();
 
     archivo.close();
 
-    return true;
+    return lecturaCorrecta;
 }
-
 // ===================================================
 //  Tamaño: Devuelve la cantidad de palabras almacenadas en la tabla hash.
 // ===================================================
@@ -338,4 +344,85 @@ double DiccionarioHash::factorCarga() const {
 
     return static_cast<double>(cantidad) / tabla.size();
 
+}
+
+// ===================================================
+//  Guardar En Archivo: Guarda las palabras y frecuencias en un archivo de texto.
+//  Cada línea del archivo contendrá una palabra y su frecuencia separadas por un espacio.
+//  Devuelve true si la operación fue exitosa, false en caso contrario.
+// ===================================================
+
+
+bool DiccionarioHash::guardarEnArchivo(
+    const std::string& ruta
+) const {
+
+    std::ofstream archivo(ruta);
+
+    if (!archivo.is_open()) {
+        return false;
+    }
+
+    for (std::size_t i = 0; i < tabla.size(); i++) {
+
+        Nodo* actual = tabla[i];
+
+        while (actual != nullptr) {
+
+            archivo << actual->palabra << '\n';
+
+            if (!archivo.good()) {
+                archivo.close();
+                return false;
+            }
+
+            actual = actual->siguiente;
+        }
+    }
+
+    archivo.close();
+
+    return !archivo.fail();
+}
+
+//===================================================
+//  Agregar Palabra Personal: Agrega una palabra al diccionario personal.
+//  Devuelve true si la palabra fue agregada, false si ya existía.
+//===================================================
+
+bool DiccionarioHash::agregarPalabraPersonal(
+    const std::string& palabra
+) {
+
+    if (palabra.empty()) {
+        return false;
+    }
+
+    if (buscar(palabra)) {
+        return false;
+    }
+
+    return insertar(palabra, 1);
+}
+
+// ===================================================
+//  Agregar y Guardar Palabra Personal: Agrega una palabra al diccionario personal y la guarda en un archivo.
+//  Devuelve true si la operación fue exitosa, false en caso contrario.
+// ===================================================
+
+
+bool DiccionarioHash::agregarYGuardarPalabraPersonal(
+    const std::string& palabra,
+    const std::string& ruta
+) {
+
+    if (!agregarPalabraPersonal(palabra)) {
+        return false;
+    }
+
+    if (!guardarEnArchivo(ruta)) {
+        return false;
+    }
+
+    return true;
 }
