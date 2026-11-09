@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <cstddef>  // Para std::size_t 
-#include <cstdint>  // Fija el tamaño de los int
 
 class DiccionarioHash {
 
@@ -38,8 +37,8 @@ private:
     ) const;
     
     std::size_t funcionHash(            //otroarrojado
-    const std::string& palabra,
-    std::size_t capacidad
+        const std::string& palabra,
+        std::size_t capacidad
     ) const;
 
     void rehash(std::size_t nuevaCapacidad);
@@ -49,6 +48,9 @@ public:
     DiccionarioHash(std::size_t capacidadInicial = 101);
 
     ~DiccionarioHash();
+
+    DiccionarioHash(const DiccionarioHash&) = delete;
+    DiccionarioHash& operator=(const DiccionarioHash&) = delete;
 
     bool insertar(
         const std::string& palabra,
@@ -69,6 +71,19 @@ public:
     ) const;
 
     bool cargarDesdeArchivo(
+        const std::string& ruta
+    );
+
+    bool guardarEnArchivo(
+        const std::string& ruta
+    ) const;
+
+    bool agregarPalabraPersonal(
+        const std::string& palabra
+    );
+
+    bool agregarYGuardarPalabraPersonal(
+        const std::string& palabra,
         const std::string& ruta
     );
 
