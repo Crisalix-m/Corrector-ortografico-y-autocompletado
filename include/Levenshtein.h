@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "tipos.h"
+
 // ---------------------------------------------------------------------------
 // Levenshtein: distancia de edicion entre palabras y generacion de
 // sugerencias de correccion.
@@ -15,11 +17,6 @@
 // Complejidad de comparar dos palabras de longitud m y n:
 //   tiempo O(m * n),  espacio O(m * n) en distancia() / O(n) en la acotada.
 // ---------------------------------------------------------------------------
-
-struct Sugerencia {
-    std::string palabra;
-    int distancia;
-};
 
 class Levenshtein {
 public:
