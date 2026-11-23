@@ -322,6 +322,51 @@ bool DiccionarioHash::cargarDesdeArchivo(
     return lecturaCorrecta;
 }
 // ===================================================
+//  Fijar frecuencia: reemplaza el valor almacenado sin acumular.
+// ===================================================
+
+bool DiccionarioHash::fijarFrecuencia(
+    const std::string& palabra,
+    std::size_t frecuencia
+) {
+    if (palabra.empty()) {
+        return false;
+    }
+
+    std::size_t posicion = funcionHash(palabra);
+    Nodo* actual = tabla[posicion];
+
+    while (actual != nullptr) {
+        if (actual->palabra == palabra) {
+            actual->frecuencia = frecuencia;
+            return true;
+        }
+        actual = actual->siguiente;
+    }
+
+    return false;
+}
+
+// ===================================================
+//  Palabras: devuelve todas las claves almacenadas.
+// ===================================================
+
+std::vector<std::string> DiccionarioHash::palabras() const {
+    std::vector<std::string> resultado;
+    resultado.reserve(cantidad);
+
+    for (std::size_t i = 0; i < tabla.size(); ++i) {
+        Nodo* actual = tabla[i];
+        while (actual != nullptr) {
+            resultado.push_back(actual->palabra);
+            actual = actual->siguiente;
+        }
+    }
+
+    return resultado;
+}
+
+// ===================================================
 //  Tamaño: Devuelve la cantidad de palabras almacenadas en la tabla hash.
 // ===================================================
 

@@ -87,6 +87,10 @@ public:
         const std::string& ruta
     );
 
+    bool fijarFrecuencia(const std::string& palabra, std::size_t frecuencia);
+
+    std::vector<std::string> palabras() const;
+
     std::size_t tamano() const;
 
     double factorCarga() const;
